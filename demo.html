@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>share</title>
+    <link rel="stylesheet" href="src/style.css">
+
+</head>
+<body>
+
+    <div class="share" data-share="common">
+        <i class="share-icon" data-name="tsina">webo</i>
+        <i class="share-icon" data-name="tqq">qq</i>
+        <i class="share-icon" data-name="qzone">qzone</i>
+        <i class="share-icon" data-name="renren">renren</i>
+        <i class="share-icon" data-name="tieba">tieba</i>
+        <i class="share-icon" data-name="douban">douban</i>
+        <i class="share-icon" data-name="weixin">weixin</i>
+    </div>
+
+
+    <script src="http://apps.bdimg.com/libs/jquery/2.1.1/jquery.min.js"></script>
+
+    <script>
+    var shareConfig = {
+        custom: {
+            weixin: function (data) {
+
+            }
+        },
+        common: {
+            config: {
+                '@': {
+                    title: '@标题aaaaaaaaaaaaaaaaaa',
+                    content: ' #跟谁学# 分享一位老师给你哦~赵建昆，全国最优四六级、专四专八辅导老师，还在等什么？找好老师，上跟谁学，快来开启寻师之旅吧！',
+                    url: 'http://www.genshuixue.com/',
+                    img: 'http://cdn.genshuixue.com/asset/img/share.jpg'
+                },
+                '!@': {
+                    title: '标题aaaaaaaaaaaaaaaaaa',
+                    content: ' #跟谁学# 分享一位老师给你哦~赵建昆，全国最优四六级、专四专八辅导老师，还在等什么？找好老师，上跟谁学，快来开启寻师之旅吧！',
+                    url: 'http://www.genshuixue.com/',
+                    img: 'http://cdn.genshuixue.com/asset/img/share.jpg'
+                }
+            },
+            tsina: '@',
+            tqq: '@',
+            qzone: '!@',
+            renren: '!@',
+            tieba: '!@',
+            douban: '!@',
+            weixin: '@'
+        }
+    };
+
+    </script>
+    <script src="src/share.js"></script>
+
+</body>
+</html>
