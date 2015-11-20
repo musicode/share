@@ -145,7 +145,7 @@ $(function () {
     var globalConf = window[globalVar];
 
     // 自定义配置
-    var custom = globalConf.custom || { };
+    var custom = globalConf.custom || {};
 
     $(shareSelector).each(
         function () {
@@ -157,35 +157,35 @@ $(function () {
             element.on('click', iconSelector, function (e) {
 
                 var name = $(this).data('name');
-                var conf = platform[name];
                 var data = confData[name];
 
                 if ($.type(data) === 'string') {
-                    data = $.extend({ }, confData.config[data]);
+                    data = $.extend({}, confData.config[data]);
                 }
 
                 if (!data.url) {
                     data.url = document.URL;
                 }
 
-                var query = { };
-
-                $.each(conf.data, function (key, value) {
-                    if (data[key]) {
-                        query[value] = data[key];
-                    }
-                });
-
-                if (conf.extra) {
-                    $.extend(query, conf.extra);
-                }
-
-                var url = conf.url + '?' + $.param(query);
-
                 if ($.isFunction(custom[name])) {
-                    custom[name](url);
+                    custom[name](data);
                 }
                 else {
+                    var query = {};
+                    var conf = platform[name];
+
+                    $.each(conf.data, function (key, value) {
+                        if (data[key]) {
+                            query[value] = data[key];
+                        }
+                    });
+
+                    if (conf.extra) {
+                        $.extend(query, conf.extra);
+                    }
+
+                    var url = conf.url + '?' + $.param(query);
+
                     window.open(url);
                 }
 
