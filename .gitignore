@@ -1,0 +1,7 @@
+edp-*
+*.conf
+*.json
+dep
+doc
+test
+tool

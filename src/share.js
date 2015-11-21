@@ -2,39 +2,38 @@
  * @file 可定制的分享组件
  * @author musicode
  */
-$(function () {
+(function () {
+
+    'use strict';
 
     /**
      * ## 平台配置
      *
      * 不同平台需要不同的分享文本，比如微博需要 @ 但其他平台不需要，图片同样也有类似需求
      *
-     * ## 多对一配置
-     *
-     * 如果每个平台都需要单独配置，会出现很多冗余，比如 renren 和 tieba 使用相同的配置，
-     * 最好的方式是多个平台使用同一份配置
-     *
-     * 多对一的方式如下：
-     *
      * {
-     *     config: {
-     *         name1: { },
-     *         name2: { }
+     *     tsina: {
+     *         title: '',
+     *         content: '',
+     *         url: '',
+     *         img: ''
      *     },
-     *     renren: 'name1',
-     *     tieba: 'name2'
+     *     tqq: {
+     *         结构同 tsina
+     *     },
+     *     qzone: {
+     *         结构同 tsina
+     *     },
+     *     renren: {
+     *         结构同 tsina
+     *     },
+     *     tieba: {
+     *         结构同 tsina
+     *     },
+     *     douban: {
+     *         结构同 tsina
+     *     }
      * }
-     *
-     * ## 一个页面多个分享组件
-     *
-     * 假设页面有两个分享组件，全局变量 shareConfig 配置如下：
-     *
-     * {
-     *     name1: { },
-     *     name2: { }
-     * }
-     *
-     * 然后在组件元素分别加上 data-share="name1" 和 data-share="name2"
      *
      * ## 自定义
      *
@@ -42,36 +41,13 @@ $(function () {
      *
      * {
      *     custom: {
-     *         weixin: function (url) {
-     *             // 显示二维码
+     *         weixin: function (data) {
+     *             // 比如弹窗显示二维码
      *         }
      *     }
      * }
-     */
-
-    /**
-     * 全局变量名
      *
-     * @inner
-     * @type {string}
      */
-    var globalVar = 'shareConfig';
-
-    /**
-     * 分享组件选择器
-     *
-     * @inner
-     * @type {string}
-     */
-    var shareSelector = '.share';
-
-    /**
-     * icon 选择器
-     *
-     * @inner
-     * @type {string}
-     */
-    var iconSelector = '.share-icon';
 
     /**
      * 各个平台的配置
@@ -85,10 +61,10 @@ $(function () {
             data: {
                 url: 'url',
                 title: 'title',
-                appkey: 'appkey',
                 img: 'pic'
             },
             extra: {
+                appkey: '2598258908',
                 searchPic: 'false'
             }
         },
@@ -142,58 +118,59 @@ $(function () {
         }
     };
 
-    var globalConf = window[globalVar];
+    function share(options) {
 
-    // 自定义配置
-    var custom = globalConf.custom || {};
+        var element = options.element;
+        var config = options.config;
+        var custom = options.custom;
+        var iconSelector = options.iconSelector;
 
-    $(shareSelector).each(
-        function () {
+        element.on('click', iconSelector, function (e) {
 
-            var element = $(this);
-            var confName = element.data('share');
-            var confData = globalConf[confName];
+            // 平台名称
+            var name = $(this).data('name');
+            // 平台配置
+            var data = config[name] || {};
 
-            element.on('click', iconSelector, function (e) {
+            if (!data.url) {
+                data.url = document.URL;
+            }
 
-                var name = $(this).data('name');
-                var data = confData[name];
+            if ($.isFunction(custom[name])) {
+                custom[name](data);
+            }
+            else {
+                var query = {};
+                var conf = platform[name];
 
-                if ($.type(data) === 'string') {
-                    data = $.extend({}, confData.config[data]);
-                }
-
-                if (!data.url) {
-                    data.url = document.URL;
-                }
-
-                if ($.isFunction(custom[name])) {
-                    custom[name](data);
-                }
-                else {
-                    var query = {};
-                    var conf = platform[name];
-
-                    $.each(conf.data, function (key, value) {
-                        if (data[key]) {
-                            query[value] = data[key];
-                        }
-                    });
-
-                    if (conf.extra) {
-                        $.extend(query, conf.extra);
+                $.each(conf.data, function (key, value) {
+                    if (data[key]) {
+                        query[value] = data[key];
                     }
+                });
 
-                    var url = conf.url + '?' + $.param(query);
-
-                    window.open(url);
+                if (conf.extra) {
+                    $.extend(query, conf.extra);
                 }
 
-            });
+                var url = conf.url + '?' + $.param(query);
 
-        }
-    );
+                window.open(url);
+            }
 
-});
+        });
+
+    }
+
+    if (typeof define === 'function' && define.amd) {
+        define('share', [], function () {
+            return share;
+        });
+    }
+    else {
+        window.share = share;
+    }
+
+})();
 
 
