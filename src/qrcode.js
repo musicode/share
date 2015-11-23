@@ -1266,8 +1266,9 @@ QRBitBuffer.prototype = {
 
         // set default values
         // typeNumber < 1 for automatic calculation
+        var canvas = document.createElement('canvas');
         options = $.extend( {}, {
-            render      : "canvas",
+            render      : canvas && canvas.getContext ? "canvas" : "table",
             width       : 256,
             height      : 256,
             typeNumber  : -1,
