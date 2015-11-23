@@ -89,6 +89,16 @@
                 a: 'index'
             }
         },
+        // QQ 好友
+        qq: {
+            url: 'http://connect.qq.com/widget/shareqq/index.html',
+            data: {
+                url: 'url',
+                title: 'title',
+                content: 'desc',
+                img: 'pics'
+            }
+        },
         renren: {
             url: 'http://widget.renren.com/dialog/share',
             data: {
@@ -105,6 +115,9 @@
                 title: 'title',
                 content: 'desc',
                 img: 'pic'
+            },
+            after: function (query) {
+                query.url += '%230-tieba-1-23435-7eff13ea8df1a334a227e1223f8d0dd3';
             }
         },
         douban: {
@@ -151,6 +164,10 @@
 
                 if (conf.extra) {
                     $.extend(query, conf.extra);
+                }
+
+                if ($.isFunction(conf.after)) {
+                    conf.after(query);
                 }
 
                 var url = conf.url + '?' + $.param(query);
