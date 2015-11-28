@@ -115,9 +115,6 @@
                 title: 'title',
                 content: 'desc',
                 img: 'pic'
-            },
-            after: function (query) {
-                query.url += '%230-tieba-1-23435-7eff13ea8df1a334a227e1223f8d0dd3';
             }
         },
         douban: {
@@ -149,12 +146,16 @@
                 data.url = document.URL;
             }
 
-            if ($.isFunction(custom[name])) {
+            if (custom && $.isFunction(custom[name])) {
                 custom[name](data);
             }
             else {
-                var query = {};
                 var conf = platform[name];
+                if (!conf) {
+                    return;
+                }
+
+                var query = {};
 
                 $.each(conf.data, function (key, value) {
                     if (data[key]) {
@@ -164,10 +165,6 @@
 
                 if (conf.extra) {
                     $.extend(query, conf.extra);
-                }
-
-                if ($.isFunction(conf.after)) {
-                    conf.after(query);
                 }
 
                 var url = conf.url + '?' + $.param(query);
